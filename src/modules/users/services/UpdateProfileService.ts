@@ -2,7 +2,7 @@ import { injectable, inject } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 
-import IHashPovider from '../providers/HashProvider/models/IHashProvider';
+import IHashProvider from '../providers/HashProvider/models/IHashProvider';
 import IUsersRepository from '../repositories/IUsersRepository';
 
 import User from '../infra/typeorm/entities/User';
@@ -21,8 +21,8 @@ class UpdateProfileService {
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
 
-    @inject('HashPovider')
-    private hashPovider: IHashPovider,
+    @inject('HashProvider')
+    private hashProvider: IHashProvider,
   ) {}
 
   public async execute({
@@ -54,7 +54,7 @@ class UpdateProfileService {
     }
 
     if (password && old_password) {
-      const checkOldPassword = await this.hashPovider.compareHash(
+      const checkOldPassword = await this.hashProvider.compareHash(
         old_password,
         user.password,
       );
@@ -63,7 +63,7 @@ class UpdateProfileService {
         throw new AppError('Old password does not match.');
       }
 
-      user.password = await this.hashPovider.generateHash(password);
+      user.password = await this.hashProvider.generateHash(password);
     }
 
     return this.usersRepository.save(user);
