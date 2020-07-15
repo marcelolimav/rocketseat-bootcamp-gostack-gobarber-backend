@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import multer from 'multer';
 import uploadConfig from '@config/upload';
+import { celebrate, Segments, Joi } from 'celebrate';
 
 import UsersController from '../controllers/UsersController';
 import UsersAvatarController from '../controllers/UsersAvatarController';
@@ -10,9 +11,19 @@ const usersRouter = Router();
 const usersController = new UsersController();
 const usersAvatarController = new UsersAvatarController();
 
-const upload = multer(uploadConfig);
+const upload = multer(uploadConfig.multer);
 
-usersRouter.post('/', usersController.create);
+usersRouter.post(
+  '/',
+  celebrate({
+    [Segments.BODY]: Joi.object().keys({
+      name: Joi.string().required(),
+      email: Joi.string().email().required(),
+      password: Joi.string().required(),
+    }),
+  }),
+  usersController.create,
+);
 
 usersRouter.patch(
   '/avatar',
