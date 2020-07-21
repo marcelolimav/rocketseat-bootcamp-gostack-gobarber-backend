@@ -45,7 +45,7 @@ export default {
   config: {
     disk: {},
     aws: {
-      bucket: 'app-gobarber-2',
+      bucket: 'app-gobarber-mlv-2',
     },
   },
 } as IUploadConfig;

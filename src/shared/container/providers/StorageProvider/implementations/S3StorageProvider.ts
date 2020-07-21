@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import mine from 'mime';
+import mime from 'mime';
 import aws, { S3 } from 'aws-sdk';
 import uploadConfig from '@config/upload';
 
@@ -12,14 +11,14 @@ class DiskStorageProvider implements IStorageProvider {
 
   constructor() {
     this.client = new aws.S3({
-      region: 'us-east-1',
+      region: 'sa-east-1',
     });
   }
 
   public async saveFile(file: string): Promise<string> {
     const oririnalPath = path.resolve(uploadConfig.tmpFolder, file);
 
-    const ContentType = mine.getType(oririnalPath);
+    const ContentType = mime.getType(oririnalPath);
 
     if (!ContentType) {
       throw new Error('File not found');
